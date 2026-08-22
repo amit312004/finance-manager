@@ -1,0 +1,19 @@
+{
+  "/(auth)/login/page": "/login",
+  "/(auth)/register/page": "/register",
+  "/(dashboard)/analytics/page": "/analytics",
+  "/(dashboard)/budgets/page": "/budgets",
+  "/(dashboard)/dashboard/page": "/dashboard",
+  "/(dashboard)/scanner/page": "/scanner",
+  "/(dashboard)/settings/page": "/settings",
+  "/(dashboard)/transactions/page": "/transactions",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/analysis/route": "/api/analysis",
+  "/api/auth/[...nextauth]/route": "/api/auth/[...nextauth]",
+  "/api/email-report/route": "/api/email-report",
+  "/api/register/route": "/api/register",
+  "/api/send-report/route": "/api/send-report",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/"
+}

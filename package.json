@@ -1,0 +1,19 @@
+{
+  "name": "ai-finance-platform",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "install:all": "cd server && npm install && npx prisma generate && cd ../client && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "multer": "^2.1.0",
+    "nodemailer": "^8.0.1",
+    "pdfkit": "^0.17.2"
+  }
+}

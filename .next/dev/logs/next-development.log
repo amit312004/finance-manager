@@ -1,0 +1,25 @@
+[00:00:02.934] Server  LOG      ✓ Ready in 2.1s
+[00:00:06.071] Server  LOG      ○ Compiling /dashboard ...
+[00:00:12.960] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:22.925] Server  ERROR   D:\AI finance\.next\dev\server\chunks\node_modules_nodemailer_eb279b74._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:22.988] Server  ERROR   Error sending email: Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-824418b5373sm9241345b3a.53 - gsmtp
+[00:00:30.846] Browser ERROR   Email send failed: {"details":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-824418b5373sm9241345b3a.53 - gsmtp","error":"Failed to send email"}
+[00:00:49.800] Server  ERROR   D:\AI finance\.next\dev\server\chunks\node_modules_nodemailer_eb279b74._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:49.815] Server  ERROR   Error sending email: Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 98e67ed59e1d1-354b1f49186sm9020310a91.5 - gsmtp
+[00:07:22.667] Server  LOG        Reload env: .env.local
+[00:08:24.824] Browser ERROR   Email send failed: {"details":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 98e67ed59e1d1-354b1f49186sm9020310a91.5 - gsmtp","error":"Failed to send email"}
+[00:08:27.171] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:08:41.079] Server  LOG      ○ Compiling /api/auth/[...nextauth] ...
+[00:08:43.944] Server  WARN    [next-auth][warn][DEBUG_ENABLED] "\nhttps://next-auth.js.org/warnings#debug_enabled"
+[00:08:44.205] Server  ERROR   (node:9952) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[00:08:44.538] Server  LOG     [next-auth][debug][CREATE_STATE] {}
+[00:08:44.606] Server  LOG     [next-auth][debug][CREATE_PKCECODEVERIFIER] {}
+[00:08:44.662] Server  LOG     [next-auth][debug][GET_AUTHORIZATION_URL] {}
+[00:09:00.620] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:09:31.787] Server  LOG     [next-auth][debug][CREATE_STATE] {}
+[00:09:31.817] Server  LOG     [next-auth][debug][CREATE_PKCECODEVERIFIER] {}
+[00:09:31.831] Server  LOG     [next-auth][debug][GET_AUTHORIZATION_URL] {}
+[00:09:49.426] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
