@@ -7,7 +7,10 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 
 const rawApiBaseUrl = import.meta.env.VITE_API_BASE_URL || ''
-const apiBaseUrl = rawApiBaseUrl.replace(/\/+$/, '')
+const configuredApiBaseUrl = rawApiBaseUrl.replace(/\/+$/, '')
+
+// Use env when provided; otherwise default to Vite proxy path.
+const apiBaseUrl = configuredApiBaseUrl || '/api'
 
 if (apiBaseUrl) {
   axios.defaults.baseURL = apiBaseUrl

@@ -16,7 +16,30 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
-app.use(cors());
+const defaultAllowedOrigins = [
+  'http://localhost:5173',
+  'https://finance-manager-five.vercel.app'
+];
+
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    const origins = allowedOrigins.length > 0 ? allowedOrigins : defaultAllowedOrigins;
+    if (!origin || origins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -918,6 +941,10 @@ app.post('/api/send-pdf-report', upload.single('report'), async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (process.env.VERCEL) {
+  module.exports = app;
+} else {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
