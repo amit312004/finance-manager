@@ -70,7 +70,12 @@ async function ensureDatabaseConnection() {
   await mongoConnectionPromise;
 }
 
-app.get('/api/health', (req, res) => {
+// Attempt connection on cold start to reduce first-request latency.
+ensureDatabaseConnection().catch((error) => {
+  console.error('Initial database connection failed:', error.message);
+});
+
+app.get('/api/health', async (req, res) => {
   const stateMap = {
     0: 'disconnected',
     1: 'connected',
@@ -78,10 +83,20 @@ app.get('/api/health', (req, res) => {
     3: 'disconnecting'
   };
 
-  res.json({
-    ok: true,
-    dbState: stateMap[mongoose.connection.readyState] || 'unknown'
-  });
+  try {
+    await ensureDatabaseConnection();
+    return res.json({
+      ok: true,
+      dbState: stateMap[mongoose.connection.readyState] || 'unknown'
+    });
+  } catch (error) {
+    return res.status(503).json({
+      ok: false,
+      dbState: stateMap[mongoose.connection.readyState] || 'unknown',
+      error: 'Database unavailable. Check DATABASE_URL and MongoDB network access.',
+      details: error.message
+    });
+  }
 });
 
 app.use('/api', async (req, res, next) => {
