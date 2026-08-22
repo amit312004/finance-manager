@@ -45,14 +45,61 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Database Connection
 const databaseUrl = (process.env.DATABASE_URL || '').trim();
+let mongoConnectionPromise = null;
 
-if (!databaseUrl) {
-  console.error('DATABASE_URL is not set. Configure it in environment variables.');
-} else {
-  mongoose.connect(databaseUrl)
-    .then(() => console.log('Connected to MongoDB via Mongoose'))
-    .catch(err => console.error('MongoDB connection error:', err));
+async function ensureDatabaseConnection() {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL is not set. Configure it in environment variables.');
+  }
+
+  if (!mongoConnectionPromise) {
+    mongoConnectionPromise = mongoose.connect(databaseUrl, {
+      serverSelectionTimeoutMS: 15000,
+    }).then(() => {
+      console.log('Connected to MongoDB via Mongoose');
+    }).catch((err) => {
+      mongoConnectionPromise = null;
+      throw err;
+    });
+  }
+
+  await mongoConnectionPromise;
 }
+
+app.get('/api/health', (req, res) => {
+  const stateMap = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting'
+  };
+
+  res.json({
+    ok: true,
+    dbState: stateMap[mongoose.connection.readyState] || 'unknown'
+  });
+});
+
+app.use('/api', async (req, res, next) => {
+  if (req.path === '/health') {
+    return next();
+  }
+
+  try {
+    await ensureDatabaseConnection();
+    return next();
+  } catch (error) {
+    console.error('Database unavailable for API request:', error.message);
+    return res.status(503).json({
+      error: 'Database unavailable. Check DATABASE_URL and MongoDB network access.',
+      details: error.message
+    });
+  }
+});
 
 // Auth Routes
 app.post('/api/register', async (req, res) => {
