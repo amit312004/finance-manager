@@ -44,9 +44,15 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Database Connection
-mongoose.connect(process.env.DATABASE_URL)
-  .then(() => console.log('Connected to MongoDB via Mongoose'))
-  .catch(err => console.error('MongoDB connection error:', err));
+const databaseUrl = (process.env.DATABASE_URL || '').trim();
+
+if (!databaseUrl) {
+  console.error('DATABASE_URL is not set. Configure it in environment variables.');
+} else {
+  mongoose.connect(databaseUrl)
+    .then(() => console.log('Connected to MongoDB via Mongoose'))
+    .catch(err => console.error('MongoDB connection error:', err));
+}
 
 // Auth Routes
 app.post('/api/register', async (req, res) => {
@@ -886,19 +892,28 @@ app.post('/api/send-report', authenticate, async (req, res) => {
     res.status(500).json({ error: 'Failed to send email' });
   }
 });
+const isVercelRuntime = Boolean(process.env.VERCEL);
+const uploadDir = isVercelRuntime ? '/tmp/uploads' : 'uploads';
 
+const upload = multer({ dest: uploadDir });
 
-const upload = multer({ dest: 'uploads/' });
-
-// Ensure uploads directory exists
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
+// Ensure uploads directory exists. On Vercel only /tmp is writable.
+if (!fs.existsSync(uploadDir)) {
+  try {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  } catch (error) {
+    console.error(`Failed to create upload directory at ${uploadDir}:`, error);
+  }
 }
 
 // Add /api/send-pdf-report route to handle client-generated PDF uploads
 app.post('/api/send-pdf-report', upload.single('report'), async (req, res) => {
   try {
     const { email } = req.body;
+    if (!req.file?.path) {
+      return res.status(400).json({ error: 'Report file is required' });
+    }
+
     const reportPath = req.file.path;
 
     if (!email) {
@@ -941,7 +956,7 @@ app.post('/api/send-pdf-report', upload.single('report'), async (req, res) => {
   }
 });
 
-if (process.env.VERCEL) {
+if (isVercelRuntime) {
   module.exports = app;
 } else {
   app.listen(PORT, () => {
